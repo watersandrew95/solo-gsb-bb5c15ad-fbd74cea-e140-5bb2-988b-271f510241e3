@@ -1,0 +1,15 @@
+services:
+  reverb-lab:
+    build: .
+    container_name: reverb-lab
+    ports:
+      - "8000:8000"
+    environment:
+      # SQLite 数据库文件位置（容器内路径，挂卷后可持久化）
+      - DB_PATH=/data/reverb.db
+    volumes:
+      - reverb_data:/data
+    restart: unless-stopped
+
+volumes:
+  reverb_data:
