@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>混响配方实验台</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+  <h1>🔊 混响配方实验台</h1>
+  <span class="subtitle">基于赛宾公式 T = 0.161·V / A 的 RT60 频带分析与材料替换推荐</span>
+</header>
+
+<div class="layout">
+  <!-- 侧栏：房间与实验 -->
+  <aside>
+    <section class="panel">
+      <h2>房间</h2>
+      <form id="new-room-form" class="stack">
+        <input id="new-room-name" placeholder="房间名称，如：会议室A" required maxlength="80">
+        <input id="new-room-volume" type="number" step="any" min="0.1" placeholder="体积 V (m³)" required>
+        <button type="submit">＋ 创建房间</button>
+      </form>
+      <ul id="room-list" class="item-list"></ul>
+    </section>
+
+    <section class="panel">
+      <h2>已保存实验</h2>
+      <ul id="experiment-list" class="item-list"></ul>
+    </section>
+  </aside>
+
+  <!-- 主区 -->
+  <main>
+    <div id="empty-hint" class="panel hint">← 请选择或创建一个房间开始实验</div>
+
+    <div id="room-view" hidden>
+      <section class="panel">
+        <div class="room-head">
+          <input id="room-name" maxlength="80">
+          <label>体积 <input id="room-volume" type="number" step="any" min="0.1"> m³</label>
+          <button id="save-room-meta">保存修改</button>
+          <button id="delete-room" class="danger">删除房间</button>
+        </div>
+
+        <h2>表面与材料</h2>
+        <table id="surface-table">
+          <thead>
+            <tr><th>表面</th><th>面积 (m²)</th><th>材料</th><th></th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <form id="add-surface-form" class="row-form">
+          <input id="surface-name" placeholder="表面名称，如：天花板" required maxlength="80">
+          <input id="surface-area" type="number" step="any" min="0.1" placeholder="面积 m²" required>
+          <select id="surface-material"></select>
+          <button type="submit">＋ 添加表面</button>
+        </form>
+      </section>
+
+      <section class="panel">
+        <h2>RT60 频响曲线</h2>
+        <div class="target-row">
+          <label>目标区间
+            <input id="target-min" type="number" step="0.05" min="0.05" value="0.60"> ~
+            <input id="target-max" type="number" step="0.05" min="0.05" value="1.00"> s
+          </label>
+          <button id="recommend-btn">🔍 推荐一次材料替换</button>
+          <input id="exp-name" placeholder="实验名称" maxlength="80">
+          <button id="save-exp-btn">💾 保存实验</button>
+        </div>
+        <canvas id="rt60-chart" width="860" height="380"></canvas>
+        <table id="rt60-table">
+          <thead><tr><th>频带</th><th>等效吸声量 A (m²)</th><th>RT60 (s)</th><th>状态</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </section>
+
+      <section class="panel" id="recommend-panel" hidden>
+        <h2>推荐方案（可解释约束搜索）</h2>
+        <div id="recommend-result"></div>
+      </section>
+    </div>
+
+    <!-- 实验快照查看 -->
+    <div id="experiment-view" hidden>
+      <section class="panel">
+        <div class="room-head">
+          <h2 id="exp-title"></h2>
+          <button id="close-exp">关闭</button>
+        </div>
+        <div id="exp-meta" class="meta"></div>
+        <canvas id="exp-chart" width="860" height="380"></canvas>
+        <div id="exp-recommendation"></div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<div id="toast" hidden></div>
+<script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      # SQLite 数据库文件位置（容器内路径，挂卷后数据持久化）
+      DB_PATH: /data/reverb.db
+    volumes:
+      - reverb-data:/data
+    restart: unless-stopped
+
+volumes:
+  reverb-data:
